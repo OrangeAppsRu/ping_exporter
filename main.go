@@ -19,7 +19,7 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-const version string = "0.4.4"
+const version string = "v0.0.1"
 
 var (
 	showVersion   = kingpin.Flag("version", "Print version information").Default().Bool()
@@ -138,10 +138,13 @@ func startMonitor(cfg *config.Config) (*mon.Monitor, error) {
 	targets := make([]*target, len(cfg.Targets))
 	for i, host := range cfg.Targets {
 		t := &target{
-			host:      host,
+			host:      host.Target,
 			addresses: make([]net.IPAddr, 0),
 			delay:     time.Duration(10*i) * time.Millisecond,
 			resolver:  resolver,
+		}
+		if host.Name != "" {
+			t.name = host.Name
 		}
 		targets[i] = t
 
@@ -234,7 +237,12 @@ func setupResolver(cfg *config.Config) *net.Resolver {
 // config has non-zero values.
 func addFlagToConfig(cfg *config.Config) {
 	if len(cfg.Targets) == 0 {
-		cfg.Targets = *targets
+		for _, target := range *targets {
+			ctarget := config.Target{
+				Target: target,
+			}
+			cfg.Targets = append(cfg.Targets, ctarget)
+		}
 	}
 	if cfg.Ping.History == 0 {
 		cfg.Ping.History = *historySize

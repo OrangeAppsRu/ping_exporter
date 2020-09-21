@@ -9,7 +9,7 @@ import (
 
 // Config represents configuration for the exporter
 type Config struct {
-	Targets []string `yaml:"targets"`
+	Targets []Target `yaml:"targets"`
 
 	Ping struct {
 		Interval duration `yaml:"interval"`
@@ -22,6 +22,11 @@ type Config struct {
 		Refresh    duration `yaml:"refresh"`
 		Nameserver string   `yaml:"nameserver"`
 	} `yaml:"dns"`
+}
+
+type Target struct {
+	Name string `yaml:"name,omitempty"`
+	Target string `yaml:"target"`
 }
 
 type duration time.Duration

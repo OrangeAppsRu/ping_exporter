@@ -1,0 +1,39 @@
+name: build
+on: 
+  push:
+    branches:
+      - master
+      - feature/*
+jobs:
+  build:
+    name: build golang
+    runs-on: ubuntu-20.04
+    steps:
+      - name: clone
+        uses: actions/checkout@v2
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@master"
+      - run: |
+          echo ${{ steps.previoustag.outputs.tag }}
+      - name: install depends
+        run: |
+          go mod download
+          mkdir artifacts
+      - name: build
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o artifacts/ping_exporter-linux-amd64 .
+      - uses: kentik/pkg@v1.0.0-rc6
+        with:
+          name: ping_exporter
+          version: ${{ steps.previoustag.outputs.tag }}
+          arch: x86_64
+          format: deb
+          package: package.yaml
+      - name: Save artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ping_exporter
+          path: |
+            artifacts/*
+            *.deb

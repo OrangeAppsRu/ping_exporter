@@ -13,6 +13,7 @@ import (
 
 type target struct {
 	host      string
+	name      string
 	addresses []net.IPAddr
 	delay     time.Duration
 	resolver  *net.Resolver
@@ -60,6 +61,7 @@ func (t *target) cleanUp(new []net.IPAddr, monitor *mon.Monitor) {
 
 func (t *target) add(addr net.IPAddr, monitor *mon.Monitor) error {
 	name := t.nameForIP(addr)
+
 	log.Infof("adding target for host %s (%v)", t.host, addr)
 	return monitor.AddTargetDelayed(name, addr, t.delay)
 }
@@ -69,7 +71,11 @@ func (t *target) nameForIP(addr net.IPAddr) string {
 	if addr.IP.To4() == nil {
 		v = 6
 	}
-	return fmt.Sprintf("%s %s %d", t.host, addr.IP, v)
+	host := t.host
+	if t.name != "" {
+		host = t.name
+	}
+	return fmt.Sprintf("%s %s %d", host, addr.IP, v)
 }
 
 func isIPAddrInSlice(ipa net.IPAddr, slice []net.IPAddr) bool {

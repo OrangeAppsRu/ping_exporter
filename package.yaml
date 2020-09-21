@@ -1,0 +1,12 @@
+meta:
+  description: Ping prometheus exporter
+  vendor: Daniel Czerwonk
+  maintainer: Dmitry Sergeev
+  license: MIT
+files:
+  "/usr/bin/ping_epxorter":
+    file: artifacts/ping_exporter-linux-amd64
+    mode: "0755"
+    user: "root"
+units:
+  - lib/systemd/system/ping_exporter.service
