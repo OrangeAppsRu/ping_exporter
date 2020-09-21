@@ -18,11 +18,6 @@ jobs:
       - name: build
         run: |
           CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o artifacts/ping_exporter-amd64 .
-          CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o artifacts/ping_exporter-386 .
-          CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o artifacts/ping_exporter-arm8 .
-          CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -o artifacts/ping_exporter-arm7 .
-          CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=6 go build -o artifacts/ping_exporter-arm6 .
-          CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=5 go build -o artifacts/ping_exporter-arm5 .
       - uses: kentik/pkg@v1.0.0-rc6
         with:
           name: ping_exporter
@@ -30,11 +25,10 @@ jobs:
           arch: x86_64
           format: deb
           package: package.yaml
-      - run: |
-          git status
-          ls -la
       - name: Save artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ping_exporter
-          path: artifacts/*
+          path: |
+            artifacts/*
+            *.deb
