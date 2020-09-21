@@ -27,11 +27,16 @@ jobs:
       - name: build
         run: |
           CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o artifacts/ping_exporter-amd64 .
-          CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o artifacts/ping_exporter-386 .
-          CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o artifacts/ping_exporter-arm64 .
-          CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -o artifacts/ping_exporter-arm7 .
-          CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=6 go build -o artifacts/ping_exporter-arm6 .
-          CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=5 go build -o artifacts/ping_exporter-arm5 .
+      - uses: kentik/pkg@v1.0.0-rc6
+        with:
+          name: ping_exporter
+          version: ${{ github.ref }}
+          arch: x86_64
+          format: deb
+          package: package.yaml
+      - run: |
+          git status
+          ls -la
       - name: Upload relerase amd64
         id: upload-release-asset-amd64
         uses: actions/upload-release-asset@v1
@@ -42,63 +47,14 @@ jobs:
           asset_path: ./artifacts/ping_exporter-amd64
           asset_name: ping_exporter-amd64
           asset_content_type: application/x-elf
-      - name: Upload relerase 386
-        id: upload-release-asset-386
+      - name: Upload release deb
+        id: upload-release-deb
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/ping_exporter-386
-          asset_name: ping_exporter-386
-          asset_content_type: application/x-elf
-      - name: Upload relerase arm64
-        id: upload-release-asset-arm64
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/ping_exporter-arm64
-          asset_name: ping_exporter-arm64
-          asset_content_type: application/x-elf
-      - name: Upload relerase arm7
-        id: upload-release-asset-arm7
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/ping_exporter-arm7
-          asset_name: ping_exporter-arm7
-          asset_content_type: application/x-elf
-      - name: Upload relerase arm6
-        id: upload-release-asset-arm6
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/ping_exporter-arm6
-          asset_name: ping_exporter-arm6
-          asset_content_type: application/x-elf
-      - name: Upload relerase arm5
-        id: upload-release-asset-arm5
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/ping_exporter-arm5
-          asset_name: ping_exporter-arm5
-          asset_content_type: application/x-elf
-      - name: systemd-service
-        id: systemd-service
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/ping_exporter.service
-          asset_name: ping_exporter.service
-          asset_content_type: text/plain
+          asset_path: ./ping_exporter_${{ github.ref }}-1_amd64.deb
+          asset_name: ping_exporter.deb
+          asset_content_type: application/vnd.debian.binary-package
+
