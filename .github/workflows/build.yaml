@@ -11,8 +11,11 @@ jobs:
     steps:
       - name: clone
         uses: actions/checkout@v2
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@master"
       - run: |
-          git tag
+          echo ${{ steps.previoustag.outputs.tag }}
       - name: install depends
         run: |
           go mod download
