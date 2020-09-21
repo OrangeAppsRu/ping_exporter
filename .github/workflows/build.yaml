@@ -26,7 +26,7 @@ jobs:
       - uses: kentik/pkg@v1.0.0-rc6
         with:
           name: ping_exporter
-          version: 0.0.1
+          version: ${{ steps.previoustag.outputs.tag }}
           arch: x86_64
           format: deb
           package: package.yaml
