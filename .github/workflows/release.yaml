@@ -28,9 +28,8 @@ jobs:
         run: |
           CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o artifacts/ping_exporter-amd64 .
       - run: |
-          version=`echo -n "${{ github.ref }}" | sed 's@refs/tags@@g'`
+          version=`echo -n "${{ github.ref }}" | sed 's@refs/tags/@@g'`
           echo "::set-env name=VERSION::${version}"
-          ls -la
       - uses: kentik/pkg@v1.0.0-rc6
         with:
           name: ping_exporter
