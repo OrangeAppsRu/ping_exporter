@@ -26,7 +26,7 @@ jobs:
           mkdir artifacts
       - name: build
         run: |
-          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o artifacts/ping_exporter-amd64 .
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o artifacts/ping_exporter-linux-amd64 .
       - run: |
           version=`echo -n "${{ github.ref }}" | sed 's@refs/tags/@@g'`
           echo "::set-env name=VERSION::${version}"
@@ -44,8 +44,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/ping_exporter-amd64
-          asset_name: ping_exporter-amd64
+          asset_path: ./artifacts/ping_exporter-linux-amd64
+          asset_name: ping_exporter-linux-amd64
           asset_content_type: application/x-elf
       - name: Upload release deb
         id: upload-release-deb
@@ -55,6 +55,6 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./ping_exporter_${{ env.VERSION }}-1_amd64.deb
-          asset_name: ping_exporter.deb
+          asset_name: ping_exporter-amd64.deb
           asset_content_type: application/vnd.debian.binary-package
 

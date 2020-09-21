@@ -5,7 +5,7 @@ meta:
   license: MIT
 files:
   "/usr/bin/ping_epxorter":
-    file: artifacts/ping_exporter-amd64
+    file: artifacts/ping_exporter-linux-amd64
     mode: "0755"
     user: "root"
 units:

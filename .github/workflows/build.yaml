@@ -22,7 +22,7 @@ jobs:
           mkdir artifacts
       - name: build
         run: |
-          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o artifacts/ping_exporter-amd64 .
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o artifacts/ping_exporter-linux-amd64 .
       - uses: kentik/pkg@v1.0.0-rc6
         with:
           name: ping_exporter
