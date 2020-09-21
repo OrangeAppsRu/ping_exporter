@@ -23,7 +23,7 @@ jobs:
           CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -o artifacts/ping_exporter-arm7 .
           CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=6 go build -o artifacts/ping_exporter-arm6 .
           CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=5 go build -o artifacts/ping_exporter-arm5 .
-      - uses: kentik/pkg@v1
+      - uses: kentik/pkg@v1.0.0-rc6
         with:
           name: ping_exporter
           version: 0.0.1
