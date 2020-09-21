@@ -34,9 +34,6 @@ jobs:
           arch: x86_64
           format: deb
           package: package.yaml
-      - run: |
-          git status
-          ls -la
       - name: Upload relerase amd64
         id: upload-release-asset-amd64
         uses: actions/upload-release-asset@v1
@@ -47,6 +44,10 @@ jobs:
           asset_path: ./artifacts/ping_exporter-amd64
           asset_name: ping_exporter-amd64
           asset_content_type: application/x-elf
+      - run: |
+          version=`echo -n "${{ github.ref }}" | sed 's@refs/tags@@g'`
+          echo "::set-env name=VERSION::${version}"
+          ls -la
       - name: Upload release deb
         id: upload-release-deb
         uses: actions/upload-release-asset@v1
@@ -54,7 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./ping_exporter_${{ github.ref }}-1_amd64.deb
+          asset_path: ./ping_exporter_${{ env.VERSION }}-1_amd64.deb
           asset_name: ping_exporter.deb
           asset_content_type: application/vnd.debian.binary-package
 
