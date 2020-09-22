@@ -19,11 +19,13 @@ Targets can be specified in a YAML based config file:
 
 ```yaml
 targets:
-  - 8.8.8.8
-  - 8.8.4.4
-  - 2001:4860:4860::8888
-  - 2001:4860:4860::8844
-  - google.com
+  - target: 8.8.8.8
+  - target: 8.8.4.4
+  - name: google_dns_v6_8888
+    target: 2001:4860:4860::8888
+  - name: google_dns_v6_8844
+    target: 2001:4860:4860::8844
+  - target: google.com
   
 dns:
   refresh: 2m15s
