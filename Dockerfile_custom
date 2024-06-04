@@ -4,12 +4,14 @@ WORKDIR /go/ping_exporter
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -a -installsuffix cgo -o /go/bin/ping_exporter
 
 
-FROM docker.io/alpine:3.20.0 as certificates
-RUN apk --no-cache add ca-certificates
+FROM docker.io/alpine:3.20.0 as settings
+RUN apk --no-cache add ca-certificates libcap
+COPY --from=builder /go/bin/ping_exporter /ping_exporter
+RUN setcap cap_net_raw+ep /ping_exporter
 
 FROM scratch
-WORKDIR /app
-COPY --from=certificates /etc/ssl /etc/ssl
-COPY --from=builder /go/bin/ping_exporter /app/ping_exporter
+WORKDIR /
+COPY --from=settings /etc/ssl /etc/ssl
+COPY --from=settings /ping_exporter /ping_exporter
 
-ENTRYPOINT ["/app/ping_exporter"]
+ENTRYPOINT ["/ping_exporter"]
